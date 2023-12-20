@@ -11,6 +11,8 @@ public class InputManager : MonoBehaviour
     private PlayerMotor motor;
     private PlayerLook look;
 
+    public bool mouseLock = false;
+
     void Awake()
     {
         playerInput = new PlayerInput();
@@ -32,7 +34,30 @@ public class InputManager : MonoBehaviour
 
     private void LateUpdate() 
     {
-        look.ProcessLook(onFoot.Look.ReadValue<Vector2>());    
+        if (mouseLock)
+        {
+            look.ProcessLook(onFoot.Look.ReadValue<Vector2>()); 
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!mouseLock)
+            {
+                mouseLock = true;
+            }
+            else if (mouseLock)
+            {
+                mouseLock = false;
+            }
+        }
     }
 
     void OnEnable()
